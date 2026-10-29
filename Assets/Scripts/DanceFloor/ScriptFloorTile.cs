@@ -8,6 +8,7 @@ public class ScriptFloorTile : MonoBehaviour
     Material[] Materials = new Material[2];
     ScriptDanceFloorController controller;
     [SerializeField]
+    AnimationCurve sizeCurve;
     GameObject[] NeighbourTiles = new GameObject[4];
     /*
      * 0 --> Front
@@ -16,10 +17,13 @@ public class ScriptFloorTile : MonoBehaviour
      * 3 --> Left
      */
 
+
+    Vector3 saveSize;
     MeshRenderer renderer;
     private void Awake()
     {
         renderer = GetComponent<MeshRenderer>();
+        saveSize = transform.localScale;
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -71,6 +75,7 @@ public class ScriptFloorTile : MonoBehaviour
 
 
     #region effects
+    #region color
     Coroutine ChangeColorCoroutineSaver;
     public void changeColor(float time, float delay, Material material, GameObject originN,  bool repeatWave)
     {
@@ -142,12 +147,91 @@ public class ScriptFloorTile : MonoBehaviour
         ChangeColorCoroutineSaver = null;
     }
 
+
+    #endregion
+
+    #region Size
+    Coroutine ChangeSizeCoroutineSaver;
+    public void changeSize(float time, float delay, GameObject originN, bool repeatWave)
+    {
+        if (ChangeSizeCoroutineSaver == null)
+        {
+            ChangeSizeCoroutineSaver = StartCoroutine(ChangeSizeCoroutine(time, delay, originN, repeatWave));
+        }
+    }
+    IEnumerator ChangeSizeCoroutine(float time, float delay, GameObject originN, bool repeatWave)
+    {
+        yield return new WaitForSeconds(delay);
+        float timer = 0;
+        while(timer < time)
+        {
+            transform.localScale = new Vector3(saveSize.x, saveSize.y * sizeCurve.Evaluate(timer / time), saveSize.z);
+            timer += Time.deltaTime;
+            yield return null;
+        }
+        transform.localScale = saveSize;
+
+        if (repeatWave)
+        {
+            if (originN != null)
+            {
+                Vector3 normalVectorFromOrigin = (originN.transform.position - transform.position).normalized;
+
+                //esta parte del codigo es para que los tiles con un eje en comun lideren la onda hacia el exterior (eje de las y)
+                if (normalVectorFromOrigin.x == 0) //el origen esta en la misma linea horizontal
+                {
+                    if (normalVectorFromOrigin.z >= 0) // el origen esta atras
+                    {
+                        if (NeighbourTiles[0] != null)
+                        {
+                            NeighbourTiles[0].GetComponent<ScriptFloorTile>().changeSize(time, delay, originN, repeatWave);
+                        }
+
+                    }
+                    if (normalVectorFromOrigin.z <= 0) // el orifen esta delante
+                    {
+                        if (NeighbourTiles[2] != null)
+                        {
+                            NeighbourTiles[2].GetComponent<ScriptFloorTile>().changeSize(time, delay, originN, repeatWave);
+                        }
+                    }
+                }
+
+                //esta parte es para repetir la expansion sobre el eje de las x
+                //para que te hagas una idea esto solo hace una onda expansiba en horizontal
+                if (normalVectorFromOrigin.x >= 0)
+                {
+                    if (NeighbourTiles[1] != null)
+                    {
+                        NeighbourTiles[1].GetComponent<ScriptFloorTile>().changeSize(time, delay, originN, repeatWave);
+                    }
+                }
+                if (normalVectorFromOrigin.x <= 0)
+                {
+                    if (NeighbourTiles[3] != null)
+                    {
+                        NeighbourTiles[3].GetComponent<ScriptFloorTile>().changeSize(time, delay, originN, repeatWave);
+                    }
+                }
+
+            }
+            else
+            {
+                Debug.LogError("Invalid action: neighbor is null while repeatWave is true ");
+            }
+
+        }
+        ChangeSizeCoroutineSaver = null;
+    }
+
+
+    #endregion
+
     void ChangeMaterial(Material material)
     {
         Material materialOld = renderer.material;
         renderer.material = material;
         Destroy(materialOld);
     }
-
     #endregion
 }

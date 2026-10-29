@@ -109,7 +109,7 @@ public class ScriptDanceFloorController : MonoBehaviour
         string[] splitName = tile.name.Split('[', ',', ']');
         int y = int.Parse(splitName[1]) + (int)move.y;
         int x = int.Parse(splitName[2]) + (int)move.x;
-        Debug.Log($"y: {y}, x: {x}");
+        //Debug.Log($"y: {y}, x: {x}");
         if(y>=0 && y<tileFloorMatrix.Length && x >= 0 && x < tileFloorMatrix[y].Length)
         {
             return tileFloorMatrix[y][x];
