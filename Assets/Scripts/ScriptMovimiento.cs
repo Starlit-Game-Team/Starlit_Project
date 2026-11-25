@@ -4,14 +4,13 @@ using UnityEngine.InputSystem;
 
 public class ScriptMovimiento : MonoBehaviour
 {
-    [SerializeField] InputActionReference move;
+    
 
     GameObject tileCurrentlyOn;
     ScriptDanceFloorController controller;
     ScriptMusicBeat musicController;
 
 
-    float moveCooldown = 1f;
     private void Awake()
     {
         controller = FindAnyObjectByType<ScriptDanceFloorController>();
@@ -26,43 +25,17 @@ public class ScriptMovimiento : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        moveCooldown -= Time.deltaTime;
+
     }
 
-    private void OnEnable()
-    {
-        move.action.started += Move;
-        //move.action.performed += Move;
-        //move.action.canceled += Move;
-    }
-    private void OnDisable()
-    {
-        move.action.started -= Move;
-        //move.action.performed -= Move;
-        //move.action.canceled -= Move;
-    }
+    
 
-    private void Move(InputAction.CallbackContext context)
+    public void MoveDirection(Vector2 direction)
     {
+        GameObject nextTile = controller.getNextMoveTile(tileCurrentlyOn, direction);
+        moveToTile(nextTile);
 
-        if (musicController.onTempo() && moveCooldown < 0)
-        {
-            
-            Vector2 movementInput = move.action.ReadValue<Vector2>();
-            movementInput = Mathf.Abs(movementInput.x) >= (Mathf.Abs(movementInput.y)) ? new Vector2((Mathf.Abs(movementInput.x)/ movementInput.x), 0) : new Vector2(0, (Mathf.Abs(movementInput.y) / movementInput.y));
-            GameObject nextTile = controller.getNextMoveTile(tileCurrentlyOn, movementInput);
-            //Debug.Log($"Current tile: {tileCurrentlyOn.name}, Next tile: {nextTile.name}");
-            moveToTile(nextTile);
-        }
-        else
-        {
-            if(moveCooldown < 0)
-            {
-                moveCooldown = 60f / musicController.getBPM() * 0.75f;
-            }
-            
-        }
-        
+
     }
 
     private void moveToTile(GameObject tile)

@@ -54,10 +54,15 @@ public class ScriptMusicBeat : MonoBehaviour
         {
             float BPMratio = 60f / BPM;
             float tempo = getTempo();
-            Debug.Log(tempo);
+            //Debug.Log(tempo);
             //Debug.Log("GREAT!!!");
             bool result = (tempo <= (BPMratio * acceptancePercentage / 200f) || tempo >= BPMratio - (BPMratio * acceptancePercentage / 200f));
-            Debug.Log(result ? "<color=green>GREAT!!!</color>" : "<color=red>Fail</color>");
+            if (!result)
+            {
+                tempo -= Time.deltaTime;
+                result = (tempo <= (BPMratio * acceptancePercentage / 200f) || tempo >= BPMratio - (BPMratio * acceptancePercentage / 200f));
+            }
+            //Debug.Log(result ? "<color=green>GREAT!!!</color>" : "<color=red>Fail</color>");
             return result;
         }
         

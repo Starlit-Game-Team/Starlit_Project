@@ -1,26 +1,37 @@
 using System.Collections;
-using System.Diagnostics;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class ScriptRythmUIHelper : MonoBehaviour
 {
+    [SerializeField] InputActionReference move;
     [SerializeField] float endScale;
     float startScale;
 
     [SerializeField] GameObject aro;
+    Image imageCenter;
+    Image imageAro;
 
     ScriptMusicBeat musicBeat;
     float timer = 0;
     float lastTempoReceived = 1;
 
 
+    [SerializeField] Color colorDefault = Color.red;
+    [SerializeField] Color colorAccept = Color.green;
+
+
     bool debug=false;
     private void Awake()
     {
+        imageCenter = GetComponent<Image>();
+        imageAro = aro.GetComponent<Image>();
         musicBeat = FindAnyObjectByType<ScriptMusicBeat>();
         //ScriptMusicBeat.audioStarted += startSync;
         ScriptMusicBeat.beatStarted += updateTempo;
+        move.action.started += checkInput;
 
 
     }
@@ -35,7 +46,18 @@ public class ScriptRythmUIHelper : MonoBehaviour
     void Update()
     {
         timer -= Time.deltaTime;
-        
+        imageCenter.color = musicBeat.onTempo() ? colorAccept : colorDefault;
+        /*if(imageCenter.color == colorAccept) //esto es porque quiero ver cuantos frames ocupa un resultado positivo
+        {
+            i++;
+        }
+        else if (i > 0)
+        {
+            Debug.Log(i);
+            i = 0;
+        }*/
+
+
     }
 
     /*private void startSync()
@@ -71,6 +93,11 @@ public class ScriptRythmUIHelper : MonoBehaviour
             yield return null;
         }
         
+    }
+
+    private void checkInput(InputAction.CallbackContext context)
+    {
+        imageAro.color = (imageCenter.color == colorDefault) ? Color.pink: Color.blue ;
     }
 
 }

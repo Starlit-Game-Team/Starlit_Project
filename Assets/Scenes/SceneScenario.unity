@@ -360,8 +360,9 @@ GameObject:
   - component: {fileID: 616897235}
   - component: {fileID: 616897234}
   - component: {fileID: 616897231}
+  - component: {fileID: 616897237}
   m_Layer: 0
-  m_Name: Capsule
+  m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -379,7 +380,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 121e547ebfbbe894b94f70db8b09fb13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ScriptMovimiento
-  move: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
 --- !u!23 &616897234
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -452,37 +452,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &658195103
-GameObject:
+--- !u!114 &616897237
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 658195104}
-  m_Layer: 0
-  m_Name: GameObject
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &658195104
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 658195103}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.72327, y: 0, z: 1.06263}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_GameObject: {fileID: 616897230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12890c82be37f534dbb22d4452660354, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ScriptPlayerController
+  move: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
 --- !u!1 &659256581
 GameObject:
   m_ObjectHideFlags: 0
@@ -953,8 +935,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b562587ca18c6f4ead49edb8cb65e3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ScriptRythmUIHelper
+  move: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   endScale: 0.8
   aro: {fileID: 2027694902}
+  colorDefault: {r: 1, g: 0, b: 0, a: 1}
+  colorAccept: {r: 0, g: 1, b: 0, a: 1}
 --- !u!114 &1480277957
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1472,13 +1457,12 @@ CanvasRenderer:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 2011040741}
   - {fileID: 659256584}
   - {fileID: 559232224}
   - {fileID: 1366267183}
   - {fileID: 1752004822}
   - {fileID: 1293523344}
-  - {fileID: 658195104}
   - {fileID: 616897236}
-  - {fileID: 2011040741}
   - {fileID: 79722036}
   - {fileID: 1303293143}
