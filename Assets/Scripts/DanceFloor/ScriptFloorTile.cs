@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
+using static Unity.Collections.AllocatorManager;
 
 public class ScriptFloorTile : MonoBehaviour
 {
@@ -76,20 +78,34 @@ public class ScriptFloorTile : MonoBehaviour
 
     #region effects
     #region color
+    bool colorLock = false;
     Coroutine ChangeColorCoroutineSaver;
-    public void changeColor(float time, float delay, Material material, GameObject originN,  bool repeatWave)
+    public void changeColor(float time, float delay, Material material, GameObject originN,  bool repeatWave, bool Lock = false)
     {
+        if (colorLock)
+        {
+            return;
+        }
         if(material == null)
         {
             material = Materials[1];
         }
-        if (ChangeColorCoroutineSaver == null)
+        /*if (ChangeColorCoroutineSaver == null)
         {
             ChangeColorCoroutineSaver = StartCoroutine(ChangeColorCoroutine(time, delay, material, originN, repeatWave));
+        }*/
+
+        if(ChangeColorCoroutineSaver != null )
+        {
+            StopCoroutine(ChangeColorCoroutineSaver);
         }
+        
+        ChangeColorCoroutineSaver = StartCoroutine(ChangeColorCoroutine(time, delay, material, originN, repeatWave, Lock));
+
     }
-    IEnumerator ChangeColorCoroutine(float time, float delay, Material material, GameObject originN,  bool repeatWave)
+    IEnumerator ChangeColorCoroutine(float time, float delay, Material material, GameObject originN,  bool repeatWave, bool Lock = false)
     {
+        colorLock = Lock;
         yield return new WaitForSeconds(delay);
         ChangeMaterial(material);
         yield return new WaitForSeconds(time);
@@ -107,7 +123,7 @@ public class ScriptFloorTile : MonoBehaviour
                     {
                         if (NeighbourTiles[0] != null)
                         {
-                            NeighbourTiles[0].GetComponent<ScriptFloorTile>().changeColor(time, delay, material, originN, repeatWave);
+                            NeighbourTiles[0].GetComponent<ScriptFloorTile>().changeColor(time, delay, material, originN, repeatWave, Lock);
                         }
                         
                     }
@@ -115,7 +131,7 @@ public class ScriptFloorTile : MonoBehaviour
                     {
                         if (NeighbourTiles[2] != null)
                         {
-                            NeighbourTiles[2].GetComponent<ScriptFloorTile>().changeColor(time, delay, material, originN, repeatWave);
+                            NeighbourTiles[2].GetComponent<ScriptFloorTile>().changeColor(time, delay, material, originN, repeatWave, Lock);
                         }
                     }
                 }
@@ -126,14 +142,14 @@ public class ScriptFloorTile : MonoBehaviour
                 {
                     if (NeighbourTiles[1] != null)
                     {
-                        NeighbourTiles[1].GetComponent<ScriptFloorTile>().changeColor(time, delay, material, originN, repeatWave);
+                        NeighbourTiles[1].GetComponent<ScriptFloorTile>().changeColor(time, delay, material, originN, repeatWave, Lock);
                     }
                 }
                 if (normalVectorFromOrigin.x <= 0)
                 {
                     if (NeighbourTiles[3] != null)
                     {
-                        NeighbourTiles[3].GetComponent<ScriptFloorTile>().changeColor(time, delay, material, originN, repeatWave);
+                        NeighbourTiles[3].GetComponent<ScriptFloorTile>().changeColor(time, delay, material, originN, repeatWave, Lock);
                     }
                 }
 
@@ -144,6 +160,7 @@ public class ScriptFloorTile : MonoBehaviour
             }
 
         }
+        colorLock = false;
         ChangeColorCoroutineSaver = null;
     }
 
@@ -151,16 +168,27 @@ public class ScriptFloorTile : MonoBehaviour
     #endregion
 
     #region Size
+    bool sizeLock = false;
     Coroutine ChangeSizeCoroutineSaver;
-    public void changeSize(float time, float delay, GameObject originN, bool repeatWave)
+    public void changeSize(float time, float delay, GameObject originN, bool repeatWave, bool Lock = false)
     {
-        if (ChangeSizeCoroutineSaver == null)
+        if (sizeLock)
+        {
+            return;
+        }
+        /*if (ChangeSizeCoroutineSaver == null)
         {
             ChangeSizeCoroutineSaver = StartCoroutine(ChangeSizeCoroutine(time, delay, originN, repeatWave));
+        }*/
+        if (ChangeSizeCoroutineSaver != null)
+        {
+            StopCoroutine(ChangeSizeCoroutineSaver);
         }
+        ChangeSizeCoroutineSaver = StartCoroutine(ChangeSizeCoroutine(time, delay, originN, repeatWave, Lock));
     }
-    IEnumerator ChangeSizeCoroutine(float time, float delay, GameObject originN, bool repeatWave)
+    IEnumerator ChangeSizeCoroutine(float time, float delay, GameObject originN, bool repeatWave, bool Lock = false)
     {
+        sizeLock = Lock;
         yield return new WaitForSeconds(delay);
         float timer = 0;
         while(timer < time)
@@ -184,7 +212,7 @@ public class ScriptFloorTile : MonoBehaviour
                     {
                         if (NeighbourTiles[0] != null)
                         {
-                            NeighbourTiles[0].GetComponent<ScriptFloorTile>().changeSize(time, delay, originN, repeatWave);
+                            NeighbourTiles[0].GetComponent<ScriptFloorTile>().changeSize(time, delay, originN, repeatWave, Lock);
                         }
 
                     }
@@ -192,7 +220,7 @@ public class ScriptFloorTile : MonoBehaviour
                     {
                         if (NeighbourTiles[2] != null)
                         {
-                            NeighbourTiles[2].GetComponent<ScriptFloorTile>().changeSize(time, delay, originN, repeatWave);
+                            NeighbourTiles[2].GetComponent<ScriptFloorTile>().changeSize(time, delay, originN, repeatWave, Lock);
                         }
                     }
                 }
@@ -203,14 +231,14 @@ public class ScriptFloorTile : MonoBehaviour
                 {
                     if (NeighbourTiles[1] != null)
                     {
-                        NeighbourTiles[1].GetComponent<ScriptFloorTile>().changeSize(time, delay, originN, repeatWave);
+                        NeighbourTiles[1].GetComponent<ScriptFloorTile>().changeSize(time, delay, originN, repeatWave, Lock);
                     }
                 }
                 if (normalVectorFromOrigin.x <= 0)
                 {
                     if (NeighbourTiles[3] != null)
                     {
-                        NeighbourTiles[3].GetComponent<ScriptFloorTile>().changeSize(time, delay, originN, repeatWave);
+                        NeighbourTiles[3].GetComponent<ScriptFloorTile>().changeSize(time, delay, originN, repeatWave, Lock);
                     }
                 }
 
@@ -221,6 +249,7 @@ public class ScriptFloorTile : MonoBehaviour
             }
 
         }
+        sizeLock = false;
         ChangeSizeCoroutineSaver = null;
     }
 

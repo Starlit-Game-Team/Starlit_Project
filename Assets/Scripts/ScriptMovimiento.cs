@@ -19,7 +19,14 @@ public class ScriptMovimiento : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        tileCurrentlyOn = controller.getAnyTile();
+        if(tileCurrentlyOn == null)
+        {
+
+            //tileCurrentlyOn = controller.getAnyTile();
+            moveToTile(controller.getAnyTile());
+        }
+        
+        Debug.Log($"{gameObject.name} object go to {tileCurrentlyOn.name}");
     }
 
     // Update is called once per frame
@@ -28,24 +35,49 @@ public class ScriptMovimiento : MonoBehaviour
 
     }
 
-    
 
-    public void MoveDirection(Vector2 direction)
+
+    public void MoveDirection(Vector2 direction, Material material = null)
     {
         GameObject nextTile = controller.getNextMoveTile(tileCurrentlyOn, direction);
-        moveToTile(nextTile);
+        if(tileCurrentlyOn == nextTile)
+        {
+            return;
+        }
+        moveToTile(nextTile, material);
 
 
     }
 
-    private void moveToTile(GameObject tile)
+    
+
+
+    public void moveToTile(GameObject tile, Material material = null)
     {
         tileCurrentlyOn = tile;
         Vector3 post = tile.transform.position;
         transform.position = new Vector3(post.x, transform.position.y, post.z);
-        ScriptFloorTile sft = tile.GetComponent<ScriptFloorTile>();
-        float BPMratio = 60f / musicController.getBPM();
-        sft.changeColor(BPMratio/4f, 0f, null, tile, true);
-        sft.changeSize(BPMratio/4f, 0f, tile, true);
+        //esto de aqui es para hacer una ola de efecto de tamaño y color, pero por ahora voy a bloquearño a tan solo el jugador
+        if (gameObject.CompareTag("Player"))
+        {
+            ScriptFloorTile sft = tile.GetComponent<ScriptFloorTile>();
+            float BPMratio = 60f / musicController.getBPM();
+            sft.changeColor(BPMratio / 4f, 0f, material, tile, true);
+            sft.changeSize(BPMratio / 4f, 0f, tile, true);
+        }
+        if (material != null)
+        {
+            ScriptFloorTile sft = tile.GetComponent<ScriptFloorTile>();
+            float BPMratio = 60f / musicController.getBPM();
+            sft.changeColor(BPMratio, 0f, material, tile, false, true);
+            sft.changeSize(BPMratio, 0f, tile, false, true);
+        }
+
     }
+
+    public GameObject getTileCurrentlyOn()
+    {
+        return tileCurrentlyOn;
+    }
+    
 }

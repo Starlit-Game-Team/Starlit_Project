@@ -55,6 +55,7 @@ public class ScriptPlayerController : MonoBehaviour
     private void tryMove(InputAction.CallbackContext context)
     {
         Vector2 movementInput = context.ReadValue<Vector2>();
+        Debug.Log(movementInput.x + "  " + movementInput.y);
         if (musicController.onTempo() && moveCooldown < 0)
         {
             movementInput = Mathf.Abs(movementInput.x) >= (Mathf.Abs(movementInput.y)) ? new Vector2((Mathf.Abs(movementInput.x) / movementInput.x), 0) : new Vector2(0, (Mathf.Abs(movementInput.y) / movementInput.y));

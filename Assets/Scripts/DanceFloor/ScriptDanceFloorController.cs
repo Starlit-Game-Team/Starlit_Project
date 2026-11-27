@@ -101,6 +101,27 @@ public class ScriptDanceFloorController : MonoBehaviour
     {
         return tileFloorMatrix[Random.Range(0, tileFloorMatrix.Length)][Random.Range(0, tileFloorMatrix[0].Length)];
     }
+    public GameObject getTileOpositeDirectionBorder(Vector2 direction) 
+    {
+        if(direction == Vector2.down)
+        {
+            return tileFloorMatrix[tileFloorMatrix.Length-1][Random.Range(0, tileFloorMatrix[tileFloorMatrix.Length-1].Length)];
+        }
+        else if (direction == Vector2.up)
+        {
+            return tileFloorMatrix[0][Random.Range(0, tileFloorMatrix[0].Length)];
+        }
+        else if (direction == Vector2.left)
+        {
+            return tileFloorMatrix[Random.Range(0, tileFloorMatrix[0].Length)][tileFloorMatrix.Length - 1];
+        }
+        else if (direction == Vector2.right)
+        {
+            return tileFloorMatrix[Random.Range(0, tileFloorMatrix[0].Length)][0];
+        }
+        return null;
+
+    }
     public GameObject getNextMoveTile(GameObject tile, Vector2 move)
     {
 

@@ -14,6 +14,7 @@ public class ScriptMusicBeat : MonoBehaviour
 
     public static event Action audioStarted;
     public static event Action<float> beatStarted;
+    public static event Action halfBeat;
 
     AudioSource musicPlayer;
     private void Awake()
@@ -44,6 +45,10 @@ public class ScriptMusicBeat : MonoBehaviour
         if (saveTimer < actualTempo)
         {
             beatStarted?.Invoke(actualTempo);
+        }else if (saveTimer >= 60f/BPM/2 && actualTempo <= 60f/BPM/2)
+        {
+            Debug.Log("hallo");
+            halfBeat?.Invoke();
         }
         saveTimer = actualTempo;
     }
@@ -86,4 +91,5 @@ public class ScriptMusicBeat : MonoBehaviour
         float tempo = BPMratio-((musicPlayer.time - delay) % BPMratio);
         return tempo;
     }
+    
 }
