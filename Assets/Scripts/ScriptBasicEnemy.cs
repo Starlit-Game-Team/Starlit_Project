@@ -4,14 +4,12 @@ using UnityEngine;
 
 public class ScriptBasicEnemy : MonoBehaviour
 {
-    private enum Direction { 
-        Up, Down, Left, Right
-    }
+    
     [Header("Behaviour")]
 
     [SerializeField] Direction directionMovement;
     [SerializeField] bool contactDamage = true;
-    [SerializeField] float damage = 1;
+    [SerializeField] int damage = 1;
 
     [Header("FXS")]
 
@@ -40,7 +38,7 @@ public class ScriptBasicEnemy : MonoBehaviour
         scriptMovimiento = GetComponent<ScriptMovimiento>();
         player = FindAnyObjectByType<ScriptPlayerController>().GetComponent<ScriptMovimiento>();
         ScriptMusicBeat.halfBeat += move;
-        scriptMovimiento.moveToTile(FindAnyObjectByType<ScriptDanceFloorController>().getTileOpositeDirectionBorder(translateDirection(directionMovement)), tileMaterial);
+        scriptMovimiento.moveToTile(FindAnyObjectByType<ScriptDanceFloorController>().getTileOpositeDirectionBorder(Utilities.fromDirectionToVector2(directionMovement)), tileMaterial);
 
     }
 
@@ -59,17 +57,17 @@ public class ScriptBasicEnemy : MonoBehaviour
     {
         if (lastTile == player.getTileCurrentlyOn())
         {
-            //hacer daño al jugador y...
+            hurtPlayer();
             Destroy(gameObject);
             return;
         }
 
-        scriptMovimiento.MoveDirection(translateDirection(directionMovement), tileMaterial);
+        scriptMovimiento.MoveDirection(Utilities.fromDirectionToVector2(directionMovement), tileMaterial);
         GameObject currentTile = scriptMovimiento.getTileCurrentlyOn();
         
         if(currentTile == player.getTileCurrentlyOn())
         {
-            //hacer daño al jugador y...
+            hurtPlayer();
             Destroy(gameObject);
         }
         if(currentTile == lastTile)
@@ -80,19 +78,14 @@ public class ScriptBasicEnemy : MonoBehaviour
         lastTile = currentTile;
     }
 
-    private Vector2 translateDirection(Direction dir)
+    
+
+    private void hurtPlayer()
     {
-        switch (dir)
+        ScriptLive sL = FindAnyObjectByType<ScriptLive>();
+        if (sL != null)
         {
-            case Direction.Up:
-                return new Vector2(0f, 1f);
-            case Direction.Down:
-                return new Vector2(0f, -1f);
-            case Direction.Left:
-                return new Vector2(-1f, 0f);
-            case Direction.Right:
-                return new Vector2(1f, 0f);
+            sL.addLive(damage*-1);
         }
-        return new Vector2(0f, 0f);
     }
 }

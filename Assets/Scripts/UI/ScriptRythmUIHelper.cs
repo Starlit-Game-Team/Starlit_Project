@@ -29,9 +29,7 @@ public class ScriptRythmUIHelper : MonoBehaviour
         imageCenter = GetComponent<Image>();
         imageAro = aro.GetComponent<Image>();
         musicBeat = FindAnyObjectByType<ScriptMusicBeat>();
-        //ScriptMusicBeat.audioStarted += startSync;
-        ScriptMusicBeat.beatStarted += updateTempo;
-        move.action.started += checkInput;
+        
 
 
     }
@@ -47,17 +45,21 @@ public class ScriptRythmUIHelper : MonoBehaviour
     {
         timer -= Time.deltaTime;
         imageCenter.color = musicBeat.onTempo() ? colorAccept : colorDefault;
-        /*if(imageCenter.color == colorAccept) //esto es porque quiero ver cuantos frames ocupa un resultado positivo
-        {
-            i++;
-        }
-        else if (i > 0)
-        {
-            Debug.Log(i);
-            i = 0;
-        }*/
+        
 
 
+    }
+    private void OnEnable()
+    {
+        ScriptMusicBeat.beatStarted += updateTempo;
+        ScriptMusicBeat.beatStartedWithoutDelay += beatSound;
+        move.action.started += checkInput;
+    }
+    private void OnDisable()
+    {
+        ScriptMusicBeat.beatStarted -= updateTempo;
+        ScriptMusicBeat.beatStartedWithoutDelay -= beatSound;
+        move.action.started -= checkInput;
     }
 
     /*private void startSync()
@@ -67,14 +69,18 @@ public class ScriptRythmUIHelper : MonoBehaviour
         
         
     }*/
-    private void updateTempo(float tempo)
+    private void updateTempo()
     {
+        
         lastTempoReceived = musicBeat.getTempo();
         timer = lastTempoReceived;
         debug = true;
-        musicBeat.onTempo();
-        GetComponent<AudioSource>().Play();
         
+        
+    }
+    private void beatSound()
+    {
+        GetComponent<AudioSource>().Play();
     }
     IEnumerator CoroutineAro()
     {

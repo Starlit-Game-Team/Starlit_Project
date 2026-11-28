@@ -26,7 +26,7 @@ public class ScriptMovimiento : MonoBehaviour
             moveToTile(controller.getAnyTile());
         }
         
-        Debug.Log($"{gameObject.name} object go to {tileCurrentlyOn.name}");
+        //Debug.Log($"{gameObject.name} object go to {tileCurrentlyOn.name}");
     }
 
     // Update is called once per frame
